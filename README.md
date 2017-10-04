@@ -10,21 +10,29 @@ This project can avoid storing a clear text password in Tomcat's Resource defini
 2. Write `encrypt()` & `decrypt()` methods in `mypackage.MyCustomBasicDataSourceFactory`:
 
 ```java
-    public static String encrypt(String value) {
-        /*
-         * TODO Implement a processing of returning an encrypted string
-         * (StringUtils.reverse(value) is just reversing the given value)
-         */
-        return StringUtils.reverse(value);
+    public static String encrypt(String source) {
+        // TODO Remove the following code and write a processing of returning an encrypted string
+        try {
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY.getBytes(), ALGORITHM));
+            return new String(Base64.getEncoder().encode(cipher.doFinal(source.getBytes())));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Failed to encrypt.";
+        }
     }
 
-    public static String decrypt(String value) {
-        /*
-         * TODO Implement a processing of returning an decrypted string
-         * (StringUtils.reverse(value) is just reversing the given value)
-         */
-        return StringUtils.reverse(value);
-    }
+    public static String decrypt(String encryptSource) {
+        // TODO Remove the following code and write a processing of returning an decrypted string
+        try {
+            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(KEY.getBytes(), ALGORITHM));
+            return new String(cipher.doFinal(Base64.getDecoder().decode(encryptSource.getBytes())));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Failed to decrypt.";
+        }
+}
 ```
 3. `mvn clean package`
 4. `java -jar target/encrypt-db-password-1.0.0-jar-with-dependencies.jar -e [claer text password]`
