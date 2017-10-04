@@ -1,5 +1,3 @@
-TODO Under Constructing!
-
 # Encrypting DB password in Tomcat
 
 This project can avoid storing a clear text password in Tomcat's Resource definition of a DataSource.
