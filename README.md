@@ -2,6 +2,8 @@
 
 This project can avoid storing a clear text password in Tomcat's Resource definition of a DataSource.
 
+:warning: Note that this is a "security by obscurity" solution.
+
 ## How to use:
 
 1. `git clone https://github.com/k-tamura/encrypt-db-password.git`
@@ -11,7 +13,7 @@ This project can avoid storing a clear text password in Tomcat's Resource defini
     public static String encrypt(String value) {
         /*
          * TODO Implement a processing of returning an encrypted string
-         * (StringUtils.reverse(value) is just reversing the given string)
+         * (StringUtils.reverse(value) is just reversing the given value)
          */
         return StringUtils.reverse(value);
     }
@@ -19,7 +21,7 @@ This project can avoid storing a clear text password in Tomcat's Resource defini
     public static String decrypt(String value) {
         /*
          * TODO Implement a processing of returning an decrypted string
-         * (StringUtils.reverse(value) is just reversing the given string)
+         * (StringUtils.reverse(value) is just reversing the given value)
          */
         return StringUtils.reverse(value);
     }
