@@ -1,13 +1,18 @@
 package mypackage;
 
+import java.util.Base64;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.ResourceBundle;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 import javax.naming.Context;
 import javax.naming.Name;
+import javax.naming.RefAddr;
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSourceFactory;
 
 public class MyCustomBasicDataSourceFactory extends BasicDataSourceFactory {
@@ -28,37 +33,34 @@ public class MyCustomBasicDataSourceFactory extends BasicDataSourceFactory {
 
     @Override
     public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable environment) throws Exception {
-        Object objectInstance = super.getObjectInstance(obj, name, nameCtx, environment);
-        if (objectInstance != null) {
-            BasicDataSource ds = (BasicDataSource) objectInstance;
-            if (ds.getPassword() != null && ds.getPassword().length() > 0) {
-                ds.setPassword(decrypt(ds.getPassword()));
+        if (obj instanceof Reference) {
+            Reference ref = (Reference) obj;
+            StringRefAddr passwordRefAddr = (StringRefAddr) ref.get(PROP_PASSWORD);
+            if (passwordRefAddr != null) {
+                String encryptedPwd = (String) passwordRefAddr.getContent();
+                String cleartextPwd = decrypt(encryptedPwd);
+                int index = find(PROP_PASSWORD, ref);
+                if (index >= 0) {
+                    ref.remove(index);
+                    ref.add(index, new StringRefAddr(PROP_PASSWORD, cleartextPwd));
+                }
             }
-            return ds;
-        } else {
-            return null;
         }
+        return super.getObjectInstance(obj, name, nameCtx, environment);
     }
 
-    public static String encrypt(String value) {
-        /*
-         * TODO Write a processing of returning an encrypted string
-         * (StringUtils.reverse(value) is just reversing the given string)
-         */
-        return StringUtils.reverse(value);
+    private int find(String addrType, Reference ref) throws Exception {
+        Enumeration<RefAddr> enu = ref.getAll();
+        for (int i = 0; enu.hasMoreElements(); i++) {
+            RefAddr addr = (RefAddr) enu.nextElement();
+            if (addr.getType().equals(addrType))
+                return i;
+        }
+        return -1;
     }
 
-    public static String decrypt(String value) {
-        /*
-         * TODO Write a processing of returning an decrypted string
-         * (StringUtils.reverse(value) is just reversing the given string)
-         */
-        return StringUtils.reverse(value);
-    }
-    
-    // Example
-    /*
     public static String encrypt(String source) {
+        // TODO Remove the following code and write a processing of returning an encrypted string
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(KEY.getBytes(), ALGORITHM));
@@ -70,6 +72,7 @@ public class MyCustomBasicDataSourceFactory extends BasicDataSourceFactory {
     }
 
     public static String decrypt(String encryptSource) {
+        // TODO Remove the following code and write a processing of returning an decrypted string
         try {
             Cipher cipher = Cipher.getInstance(ALGORITHM);
             cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(KEY.getBytes(), ALGORITHM));
@@ -79,8 +82,9 @@ public class MyCustomBasicDataSourceFactory extends BasicDataSourceFactory {
             return "Failed to decrypt.";
         }
     }
-    
+
     private static final String KEY = "change_this_key!";
     private static final String ALGORITHM = "AES";
-    */
+    
+    private static final String PROP_PASSWORD = "password"; // Don't change this value
 }
