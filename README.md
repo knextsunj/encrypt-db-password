@@ -28,9 +28,9 @@ This project can avoid storing a clear text password in Tomcat's Resource defini
 4. `java -jar target/encrypt-db-password-1.0.0-jar-with-dependencies.jar -e [claer text password]`
 5. Edit a data source configuration in a file like `server.xml` as follows:
 ```xml
-<Resource name="jdbc/oracle" auth="Container" type="javax.sql.DataSource"
-password="[Encrypted Password]"
+<Resource auth="Container" type="javax.sql.DataSource"
 factory="mypackage.MyCustomBasicDataSourceFactory" 
+password="[Encrypted Password]"
 ```
 6. `cp target/encrypt-db-password-1.0.0.jar $CATALINA_HOME/lib/`
 7. Start Tomcat
