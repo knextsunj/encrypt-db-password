@@ -27,7 +27,7 @@ This factory can avoid storing a clear text password in Tomcat's Resource defini
     }
 ```
 3. `mvn clean package`
-4. `java -jar target/encrypt-db-password-1.0.0-jar-with-dependencies.jar -e [claer text password]`
+4. `java -jar target/encrypt-db-password-1.0.0-jar-with-dependencies.jar -e [clear text password]`
 5. Edit a data source configuration in a file like `server.xml` as follows:
 ```xml
 <Resource auth="Container" type="javax.sql.DataSource"
