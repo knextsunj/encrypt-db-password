@@ -1,4 +1,4 @@
-package mypackage;
+package org.t246osslab.tomcat.dbcp.dbcp2;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -22,9 +22,9 @@ import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.apache.tomcat.dbcp.dbcp2.BasicDataSourceFactory;
 
-public class MyCustomBasicDataSourceFactory extends BasicDataSourceFactory {
+public class EncryptionDataSourceFactory extends BasicDataSourceFactory {
 
-    private static final Log log = LogFactory.getLog(MyCustomBasicDataSourceFactory.class);
+    private static final Log log = LogFactory.getLog(EncryptionDataSourceFactory.class);
 
     public static void main(String[] args) {
         try {
@@ -42,6 +42,7 @@ public class MyCustomBasicDataSourceFactory extends BasicDataSourceFactory {
         } catch (Exception e) {
             System.out.println("Failed to encrypt or decrypt.");
             e.printStackTrace();
+            
         }
     }
 
