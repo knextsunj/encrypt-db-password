@@ -1,6 +1,6 @@
-# Encrypting DB password in Tomcat
+# Encryption DataSource Factory in Tomcat DBCP 2
 
-This project can avoid storing a clear text password in Tomcat's Resource definition of a DataSource.
+This factory can avoid storing a clear text password in Tomcat's Resource definition of a DataSource.
 
 :warning: Note that this is a "security by obscurity" solution.
 
